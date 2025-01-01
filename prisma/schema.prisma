@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
+}
+
+model hero_section {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  before_image String
+  after_image  String
+  background   String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt()
+}
+
+model about_section {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  image      String
+  text       String
+  background String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+}
+
+model project {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  thumbnail  String
+  title      String
+  video      String
+  arrange    Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+}
+
+model social_links {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  app_name   String
+  link       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+}
