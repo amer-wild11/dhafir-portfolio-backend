@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     // قراءة البيانات المرسلة
     const body = await readBody(event);
 
-    const { id, title, thumbnail, video, arrange } = body;
+    const { id, title, thumbnail, video, arrange, selected } = body;
 
     // التحقق من وجود الحقل الأساسي (id)
     if (!id) {
@@ -35,6 +35,7 @@ export default defineEventHandler(async (event) => {
         ...(thumbnail !== undefined && { thumbnail }),
         ...(video !== undefined && { video }),
         ...(arrange !== undefined && { arrange }),
+        ...(selected !== undefined && { selected }),
       },
     });
 

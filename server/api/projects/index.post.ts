@@ -3,7 +3,7 @@ import prisma from "~/lib/prisma";
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
-  const { title, thumbnail, video } = body;
+  const { title, thumbnail, video, video_date } = body;
 
   if (!title) {
     return sendError(
@@ -24,6 +24,16 @@ export default defineEventHandler(async (event) => {
     );
   }
 
+  if (!video_date) {
+    return sendError(
+      event,
+      createError({
+        statusCode: 500,
+        statusMessage: "Video date is required!",
+      })
+    );
+  }
+
   if (!video) {
     return sendError(
       event,
@@ -40,6 +50,7 @@ export default defineEventHandler(async (event) => {
     title,
     thumbnail,
     video,
+    video_date,
     arrange: projects.length + 1,
   };
 

@@ -15,21 +15,24 @@ model admin {
 }
 
 model hero_section {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  before_image String
-  after_image  String
-  background   String
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt()
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  before_image           String
+  after_image            String
+  background             String
+  before_image_public_id String
+  after_image_public_id  String
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt()
 }
 
 model about_section {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  image      String
-  text       String
-  background String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt()
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  image           String
+  text            String
+  background      String
+  image_public_id String
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt()
 }
 
 model project {
@@ -38,6 +41,8 @@ model project {
   title      String
   video      String
   arrange    Int
+  video_date String
+  selected   Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()
 }

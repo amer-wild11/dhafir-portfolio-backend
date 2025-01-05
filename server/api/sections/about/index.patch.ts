@@ -47,22 +47,22 @@ export default defineEventHandler(async (event) => {
       );
     }
 
-    const heroSection = await prisma.hero_section.findFirst();
-    if (!heroSection) {
+    const aboutSection = await prisma.about_section.findFirst();
+    if (!aboutSection) {
       return sendError(
         event,
         createError({
           statusCode: 404,
-          statusMessage: "Hero section not found",
+          statusMessage: "About section not found",
         })
       );
     }
 
-    const newBeforeImage = form.find((field) => field.name === "before_image");
-    const newAfterImage = form.find((field) => field.name === "after_image");
-    const newBackground = form.find((field) => field.name === "background");
+    const image = form.find((field) => field.name === "image");
+    const background = form.find((field) => field.name === "background");
+    const text = form.find((field) => field.name === "text");
 
-    if (!newBeforeImage && !newAfterImage && !newBackground) {
+    if (!image && !background && !text) {
       return sendError(
         event,
         createError({
@@ -75,49 +75,36 @@ export default defineEventHandler(async (event) => {
     const updates: any = {};
 
     // Handle "before_image"
-    if (newBeforeImage) {
-      if (heroSection.before_image_public_id) {
-        await deleteFromCloudinary(heroSection.before_image_public_id);
+    if (image) {
+      if (aboutSection.image_public_id) {
+        await deleteFromCloudinary(aboutSection.image_public_id);
       }
-      const beforeImageResponse = await uploadToCloudinary(
-        newBeforeImage.data,
-        "uploads"
-      );
-      updates.before_image = beforeImageResponse.secure_url;
-      updates.before_image_public_id = beforeImageResponse.public_id;
-    }
-
-    // Handle "after_image"
-    if (newAfterImage) {
-      if (heroSection.after_image_public_id) {
-        await deleteFromCloudinary(heroSection.after_image_public_id);
-      }
-      const afterImageResponse = await uploadToCloudinary(
-        newAfterImage.data,
-        "uploads"
-      );
-      updates.after_image = afterImageResponse.secure_url;
-      updates.after_image_public_id = afterImageResponse.public_id;
+      const image_response = await uploadToCloudinary(image.data, "uploads");
+      updates.image = image_response.secure_url;
     }
 
     // Handle "background" (string link)
-    if (newBackground) {
-      updates.background = newBackground.data.toString();
+    if (background) {
+      updates.background = background.data.toString("utf-8");
+    }
+
+    if (text) {
+      updates.text = text.data.toString("utf-8");
     }
 
     // Update the database
-    await prisma.hero_section.update({
-      where: { id: heroSection.id },
+    await prisma.about_section.update({
+      where: { id: aboutSection.id },
       data: updates,
     });
 
     return {
       success: true,
-      message: "Hero section updated successfully",
+      message: "About section updated successfully",
     };
   } catch (error: any) {
     // Handle and log errors
-    console.error("Error updating hero section:", error);
+    console.error("Error updating about section:", error);
     return sendError(
       event,
       createError({
